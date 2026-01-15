@@ -77,19 +77,23 @@ function animate() {
         // Move along single axis
         position += speed;
 
-        // Calculate dimensions for seamless loop
-        const ticketWidth = 320;
-        const gap = 1;
-        const singleSetWidth = (ticketWidth + gap) * tickets.length;
+        // Calculate dimensions for seamless loop dynamically
+        const firstTicket = carousel.querySelector('.ticket');
+        if (firstTicket) {
+            const ticketWidth = firstTicket.offsetWidth;
+            const computedStyle = window.getComputedStyle(carousel);
+            const gap = parseFloat(computedStyle.gap) || 0;
+            const singleSetWidth = (ticketWidth + gap) * tickets.length;
 
-        // Reset position when one set of tickets has passed for seamless loop
-        if (position >= singleSetWidth) {
-            position = position - singleSetWidth;
+            // Reset position when one set of tickets has passed for seamless loop
+            if (position >= singleSetWidth) {
+                position = position - singleSetWidth;
+            }
+
+            // Apply transforms: translate to center, rotate, then translate along x-axis for movement
+            // The translate(-50%, -50%) centers the carousel at the screen center
+            carousel.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg) translateX(${-position}px)`;
         }
-
-        // Apply transforms: translate to center, rotate, then translate along x-axis for movement
-        // The translate(-50%, -50%) centers the carousel at the screen center
-        carousel.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg) translateX(${-position}px)`;
     }
 
     animationId = requestAnimationFrame(animate);
@@ -113,6 +117,27 @@ function init() {
     position = 0;
     animate();
 }
+
+// Handle window resize to recalculate dimensions
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        // Reset position on resize to avoid glitches
+        const firstTicket = carousel.querySelector('.ticket');
+        if (firstTicket) {
+            const ticketWidth = firstTicket.offsetWidth;
+            const computedStyle = window.getComputedStyle(carousel);
+            const gap = parseFloat(computedStyle.gap) || 0;
+            const singleSetWidth = (ticketWidth + gap) * tickets.length;
+
+            // Adjust position to stay within bounds
+            if (position >= singleSetWidth) {
+                position = position % singleSetWidth;
+            }
+        }
+    }, 150);
+});
 
 // Start when page loads
 window.addEventListener('load', init);

@@ -4,6 +4,45 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Ticket dimensions based on viewport (320px @ 1920px width = 16.67vw) */
+    --ticket-width: 16.67vw;
+    --ticket-height: 7.55vw; /* Maintains 320:145 aspect ratio */
+    --ticket-corner: 0.885vw; /* 17px scaled */
+    --ticket-gap: 0.05vw; /* 1px scaled */
+    --punch-hole-size: 0.52vw; /* 10px scaled */
+    --punch-hole-offset: 1.04vw; /* 20px scaled */
+    --hover-scale: 1.15;
+
+    /* Responsive breakpoints - adjust ticket size for smaller screens */
+    @media (max-width: 1200px) {
+        --ticket-width: 20vw;
+        --ticket-height: 9.06vw;
+        --ticket-corner: 1.06vw;
+        --ticket-gap: 0.08vw;
+        --punch-hole-size: 0.63vw;
+        --punch-hole-offset: 1.25vw;
+    }
+
+    @media (max-width: 768px) {
+        --ticket-width: 30vw;
+        --ticket-height: 13.59vw;
+        --ticket-corner: 1.59vw;
+        --ticket-gap: 0.13vw;
+        --punch-hole-size: 0.94vw;
+        --punch-hole-offset: 1.88vw;
+    }
+
+    @media (max-width: 480px) {
+        --ticket-width: 45vw;
+        --ticket-height: 20.39vw;
+        --ticket-corner: 2.39vw;
+        --ticket-gap: 0.20vw;
+        --punch-hole-size: 1.41vw;
+        --punch-hole-offset: 2.81vw;
+    }
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 100%);
@@ -23,50 +62,70 @@ body {
     top: 50%;
     left: 50%;
     display: flex;
-    gap: 1px;
+    gap: var(--ticket-gap);
     transform-origin: center center;
 }
 
 .ticket {
     position: relative;
-    width: 320px;
-    height: 145px;
+    width: var(--ticket-width);
+    height: var(--ticket-height);
     background:
-        radial-gradient(circle at 0 0, #f4e4c1 17px, transparent 17px) top left,
-        radial-gradient(circle at 100% 0, #f4e4c1 17px, transparent 17px) top right,
-        radial-gradient(circle at 0 100%, #e8d4b0 17px, transparent 17px) bottom left,
-        radial-gradient(circle at 100% 100%, #e8d4b0 17px, transparent 17px) bottom right;
+        radial-gradient(circle at 0 0, #f4e4c1 var(--ticket-corner), transparent var(--ticket-corner)) top left,
+        radial-gradient(circle at 100% 0, #f4e4c1 var(--ticket-corner), transparent var(--ticket-corner)) top right,
+        radial-gradient(circle at 0 100%, #e8d4b0 var(--ticket-corner), transparent var(--ticket-corner)) bottom left,
+        radial-gradient(circle at 100% 100%, #e8d4b0 var(--ticket-corner), transparent var(--ticket-corner)) bottom right;
     background-size: 51% 51%;
     background-repeat: no-repeat;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0.52vw 1.56vw rgba(0, 0, 0, 0.5);
     flex-shrink: 0;
     overflow: visible;
     clip-path: polygon(
-        /* Top left corner - inward circular arc from (0,17) to (17,0) */
-        0 17px,
-        3px 16.73px, 6px 16.01px, 9px 14.87px, 12.02px 12.02px,
-        14.87px 9px, 16.01px 6px, 16.73px 3px, 17px 0,
+        /* Top left corner - inward circular arc from (0,corner) to (corner,0) */
+        0 var(--ticket-corner),
+        calc(var(--ticket-corner) * 0.176) calc(var(--ticket-corner) * 0.984),
+        calc(var(--ticket-corner) * 0.353) calc(var(--ticket-corner) * 0.942),
+        calc(var(--ticket-corner) * 0.529) calc(var(--ticket-corner) * 0.875),
+        calc(var(--ticket-corner) * 0.707) calc(var(--ticket-corner) * 0.707),
+        calc(var(--ticket-corner) * 0.875) calc(var(--ticket-corner) * 0.529),
+        calc(var(--ticket-corner) * 0.942) calc(var(--ticket-corner) * 0.353),
+        calc(var(--ticket-corner) * 0.984) calc(var(--ticket-corner) * 0.176),
+        var(--ticket-corner) 0,
         /* Top side */
-        calc(100% - 17px) 0,
-        /* Top right corner - inward circular arc from (303,0) to (320,17) */
-        calc(100% - 16.73px) 3px, calc(100% - 16.01px) 6px, calc(100% - 14.87px) 9px,
-        calc(100% - 12.02px) 12.02px, calc(100% - 9px) 14.87px, calc(100% - 6px) 16.01px,
-        calc(100% - 3px) 16.73px, 100% 17px,
+        calc(100% - var(--ticket-corner)) 0,
+        /* Top right corner - inward circular arc */
+        calc(100% - var(--ticket-corner) * 0.984) calc(var(--ticket-corner) * 0.176),
+        calc(100% - var(--ticket-corner) * 0.942) calc(var(--ticket-corner) * 0.353),
+        calc(100% - var(--ticket-corner) * 0.875) calc(var(--ticket-corner) * 0.529),
+        calc(100% - var(--ticket-corner) * 0.707) calc(var(--ticket-corner) * 0.707),
+        calc(100% - var(--ticket-corner) * 0.529) calc(var(--ticket-corner) * 0.875),
+        calc(100% - var(--ticket-corner) * 0.353) calc(var(--ticket-corner) * 0.942),
+        calc(100% - var(--ticket-corner) * 0.176) calc(var(--ticket-corner) * 0.984),
+        100% var(--ticket-corner),
         /* Right side */
-        100% calc(100% - 17px),
-        /* Bottom right corner - inward circular arc from (320,128) to (303,145) */
-        calc(100% - 3px) calc(100% - 16.73px), calc(100% - 6px) calc(100% - 16.01px),
-        calc(100% - 9px) calc(100% - 14.87px), calc(100% - 12.02px) calc(100% - 12.02px),
-        calc(100% - 14.87px) calc(100% - 9px), calc(100% - 16.01px) calc(100% - 6px),
-        calc(100% - 16.73px) calc(100% - 3px), calc(100% - 17px) 100%,
+        100% calc(100% - var(--ticket-corner)),
+        /* Bottom right corner - inward circular arc */
+        calc(100% - var(--ticket-corner) * 0.176) calc(100% - var(--ticket-corner) * 0.984),
+        calc(100% - var(--ticket-corner) * 0.353) calc(100% - var(--ticket-corner) * 0.942),
+        calc(100% - var(--ticket-corner) * 0.529) calc(100% - var(--ticket-corner) * 0.875),
+        calc(100% - var(--ticket-corner) * 0.707) calc(100% - var(--ticket-corner) * 0.707),
+        calc(100% - var(--ticket-corner) * 0.875) calc(100% - var(--ticket-corner) * 0.529),
+        calc(100% - var(--ticket-corner) * 0.942) calc(100% - var(--ticket-corner) * 0.353),
+        calc(100% - var(--ticket-corner) * 0.984) calc(100% - var(--ticket-corner) * 0.176),
+        calc(100% - var(--ticket-corner)) 100%,
         /* Bottom side */
-        17px 100%,
-        /* Bottom left corner - inward circular arc from (17,145) to (0,128) */
-        16.73px calc(100% - 3px), 16.01px calc(100% - 6px), 14.87px calc(100% - 9px),
-        12.02px calc(100% - 12.02px), 9px calc(100% - 14.87px), 6px calc(100% - 16.01px),
-        3px calc(100% - 16.73px), 0 calc(100% - 17px)
+        var(--ticket-corner) 100%,
+        /* Bottom left corner - inward circular arc */
+        calc(var(--ticket-corner) * 0.984) calc(100% - var(--ticket-corner) * 0.176),
+        calc(var(--ticket-corner) * 0.942) calc(100% - var(--ticket-corner) * 0.353),
+        calc(var(--ticket-corner) * 0.875) calc(100% - var(--ticket-corner) * 0.529),
+        calc(var(--ticket-corner) * 0.707) calc(100% - var(--ticket-corner) * 0.707),
+        calc(var(--ticket-corner) * 0.529) calc(100% - var(--ticket-corner) * 0.875),
+        calc(var(--ticket-corner) * 0.353) calc(100% - var(--ticket-corner) * 0.942),
+        calc(var(--ticket-corner) * 0.176) calc(100% - var(--ticket-corner) * 0.984),
+        0 calc(100% - var(--ticket-corner))
     );
 }
 
@@ -75,8 +134,8 @@ body {
 /* Punch holes */
 .punch-hole {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: var(--punch-hole-size);
+    height: var(--punch-hole-size);
     background: #2a2a2a;
     border-radius: 50%;
     top: 50%;
@@ -85,11 +144,11 @@ body {
 }
 
 .punch-hole:nth-child(1) {
-    left: 20px;
+    left: var(--punch-hole-offset);
 }
 
 .punch-hole:nth-child(2) {
-    right: 20px;
+    right: var(--punch-hole-offset);
 }
 
 /* Ticket content */
@@ -105,88 +164,88 @@ body {
 
 /* Hover effect */
 .ticket:hover {
-    transform: scale(1.15) translateZ(20px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    transform: scale(var(--hover-scale)) translateZ(1.04vw);
+    box-shadow: 0 1.04vw 2.60vw rgba(0, 0, 0, 0.7);
     z-index: 10;
-    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(0 1.04vw 1.30vw rgba(0, 0, 0, 0.8));
     clip-path: polygon(
         /* Top left corner - inward circular arc */
-        0 17px,
-        3px 16.73px, 6px 16.01px, 9px 14.87px, 12.02px 12.02px,
-        14.87px 9px, 16.01px 6px, 16.73px 3px, 17px 0,
+        0 var(--ticket-corner),
+        calc(var(--ticket-corner) * 0.176) calc(var(--ticket-corner) * 0.984),
+        calc(var(--ticket-corner) * 0.353) calc(var(--ticket-corner) * 0.942),
+        calc(var(--ticket-corner) * 0.529) calc(var(--ticket-corner) * 0.875),
+        calc(var(--ticket-corner) * 0.707) calc(var(--ticket-corner) * 0.707),
+        calc(var(--ticket-corner) * 0.875) calc(var(--ticket-corner) * 0.529),
+        calc(var(--ticket-corner) * 0.942) calc(var(--ticket-corner) * 0.353),
+        calc(var(--ticket-corner) * 0.984) calc(var(--ticket-corner) * 0.176),
+        var(--ticket-corner) 0,
         /* Top side */
-        calc(100% - 17px) 0,
+        calc(100% - var(--ticket-corner)) 0,
         /* Top right corner - inward circular arc */
-        calc(100% - 16.73px) 3px, calc(100% - 16.01px) 6px, calc(100% - 14.87px) 9px,
-        calc(100% - 12.02px) 12.02px, calc(100% - 9px) 14.87px, calc(100% - 6px) 16.01px,
-        calc(100% - 3px) 16.73px, 100% 17px,
+        calc(100% - var(--ticket-corner) * 0.984) calc(var(--ticket-corner) * 0.176),
+        calc(100% - var(--ticket-corner) * 0.942) calc(var(--ticket-corner) * 0.353),
+        calc(100% - var(--ticket-corner) * 0.875) calc(var(--ticket-corner) * 0.529),
+        calc(100% - var(--ticket-corner) * 0.707) calc(var(--ticket-corner) * 0.707),
+        calc(100% - var(--ticket-corner) * 0.529) calc(var(--ticket-corner) * 0.875),
+        calc(100% - var(--ticket-corner) * 0.353) calc(var(--ticket-corner) * 0.942),
+        calc(100% - var(--ticket-corner) * 0.176) calc(var(--ticket-corner) * 0.984),
+        100% var(--ticket-corner),
 
-        /* Right side - sine wave torn edge with smooth curves */
-        100% 25px,
-        calc(100% - 1px) 26.5px, calc(100% - 2.5px) 28px, calc(100% - 3.5px) 29.5px,
-        calc(100% - 4px) 31px, calc(100% - 3.5px) 32.5px, calc(100% - 2.5px) 34px,
-        calc(100% - 1px) 35.5px, 100% 37px,
-        calc(100% - 1px) 38.5px, calc(100% - 2.5px) 40px, calc(100% - 3.5px) 41.5px,
-        calc(100% - 4px) 43px, calc(100% - 3.5px) 44.5px, calc(100% - 2.5px) 46px,
-        calc(100% - 1px) 47.5px, 100% 49px,
-        calc(100% - 1px) 50.5px, calc(100% - 2.5px) 52px, calc(100% - 3.5px) 53.5px,
-        calc(100% - 4px) 55px, calc(100% - 3.5px) 56.5px, calc(100% - 2.5px) 58px,
-        calc(100% - 1px) 59.5px, 100% 61px,
-        calc(100% - 1px) 62.5px, calc(100% - 2.5px) 64px, calc(100% - 3.5px) 65.5px,
-        calc(100% - 4px) 67px, calc(100% - 3.5px) 68.5px, calc(100% - 2.5px) 70px,
-        calc(100% - 1px) 71.5px, 100% 73px,
-        calc(100% - 1px) 74.5px, calc(100% - 2.5px) 76px, calc(100% - 3.5px) 77.5px,
-        calc(100% - 4px) 79px, calc(100% - 3.5px) 80.5px, calc(100% - 2.5px) 82px,
-        calc(100% - 1px) 83.5px, 100% 85px,
-        calc(100% - 1px) 86.5px, calc(100% - 2.5px) 88px, calc(100% - 3.5px) 89.5px,
-        calc(100% - 4px) 91px, calc(100% - 3.5px) 92.5px, calc(100% - 2.5px) 94px,
-        calc(100% - 1px) 95.5px, 100% 97px,
-        calc(100% - 1px) 98.5px, calc(100% - 2.5px) 100px, calc(100% - 3.5px) 101.5px,
-        calc(100% - 4px) 103px, calc(100% - 3.5px) 104.5px, calc(100% - 2.5px) 106px,
-        calc(100% - 1px) 107.5px, 100% 109px,
-        calc(100% - 1px) 110.5px, calc(100% - 2.5px) 112px, calc(100% - 3.5px) 113.5px,
-        calc(100% - 4px) 115px, calc(100% - 3.5px) 116.5px, calc(100% - 2.5px) 118px,
-        calc(100% - 1px) 119.5px, 100% 121px,
-        100% calc(100% - 17px),
+        /* Right side - torn edge effect */
+        100% calc(var(--ticket-corner) * 1.5),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 1.6), calc(100% - 0.13vw) calc(var(--ticket-corner) * 1.7),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 1.9), 100% calc(var(--ticket-corner) * 2.2),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 2.4), calc(100% - 0.13vw) calc(var(--ticket-corner) * 2.6),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 2.8), 100% calc(var(--ticket-corner) * 3.0),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 3.2), calc(100% - 0.13vw) calc(var(--ticket-corner) * 3.4),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 3.6), 100% calc(var(--ticket-corner) * 3.8),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 4.0), calc(100% - 0.13vw) calc(var(--ticket-corner) * 4.2),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 4.4), 100% calc(var(--ticket-corner) * 4.6),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 4.8), calc(100% - 0.13vw) calc(var(--ticket-corner) * 5.0),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 5.2), 100% calc(var(--ticket-corner) * 5.4),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 5.6), calc(100% - 0.13vw) calc(var(--ticket-corner) * 5.8),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 6.0), 100% calc(var(--ticket-corner) * 6.2),
+        calc(100% - 0.05vw) calc(var(--ticket-corner) * 6.4), calc(100% - 0.13vw) calc(var(--ticket-corner) * 6.6),
+        calc(100% - 0.21vw) calc(var(--ticket-corner) * 6.8), 100% calc(var(--ticket-corner) * 7.0),
+        100% calc(100% - var(--ticket-corner)),
 
         /* Bottom right corner - inward circular arc */
-        calc(100% - 3px) calc(100% - 16.73px), calc(100% - 6px) calc(100% - 16.01px),
-        calc(100% - 9px) calc(100% - 14.87px), calc(100% - 12.02px) calc(100% - 12.02px),
-        calc(100% - 14.87px) calc(100% - 9px), calc(100% - 16.01px) calc(100% - 6px),
-        calc(100% - 16.73px) calc(100% - 3px), calc(100% - 17px) 100%,
+        calc(100% - var(--ticket-corner) * 0.176) calc(100% - var(--ticket-corner) * 0.984),
+        calc(100% - var(--ticket-corner) * 0.353) calc(100% - var(--ticket-corner) * 0.942),
+        calc(100% - var(--ticket-corner) * 0.529) calc(100% - var(--ticket-corner) * 0.875),
+        calc(100% - var(--ticket-corner) * 0.707) calc(100% - var(--ticket-corner) * 0.707),
+        calc(100% - var(--ticket-corner) * 0.875) calc(100% - var(--ticket-corner) * 0.529),
+        calc(100% - var(--ticket-corner) * 0.942) calc(100% - var(--ticket-corner) * 0.353),
+        calc(100% - var(--ticket-corner) * 0.984) calc(100% - var(--ticket-corner) * 0.176),
+        calc(100% - var(--ticket-corner)) 100%,
         /* Bottom side */
-        17px 100%,
+        var(--ticket-corner) 100%,
         /* Bottom left corner - inward circular arc */
-        16.73px calc(100% - 3px), 16.01px calc(100% - 6px), 14.87px calc(100% - 9px),
-        12.02px calc(100% - 12.02px), 9px calc(100% - 14.87px), 6px calc(100% - 16.01px),
-        3px calc(100% - 16.73px), 0 calc(100% - 17px),
+        calc(var(--ticket-corner) * 0.984) calc(100% - var(--ticket-corner) * 0.176),
+        calc(var(--ticket-corner) * 0.942) calc(100% - var(--ticket-corner) * 0.353),
+        calc(var(--ticket-corner) * 0.875) calc(100% - var(--ticket-corner) * 0.529),
+        calc(var(--ticket-corner) * 0.707) calc(100% - var(--ticket-corner) * 0.707),
+        calc(var(--ticket-corner) * 0.529) calc(100% - var(--ticket-corner) * 0.875),
+        calc(var(--ticket-corner) * 0.353) calc(100% - var(--ticket-corner) * 0.942),
+        calc(var(--ticket-corner) * 0.176) calc(100% - var(--ticket-corner) * 0.984),
+        0 calc(100% - var(--ticket-corner)),
 
-        /* Left side - sine wave torn edge with smooth curves */
-        0 121px,
-        1px 119.5px, 2.5px 118px, 3.5px 116.5px,
-        4px 115px, 3.5px 113.5px, 2.5px 112px,
-        1px 110.5px, 0 109px,
-        1px 107.5px, 2.5px 106px, 3.5px 104.5px,
-        4px 103px, 3.5px 101.5px, 2.5px 100px,
-        1px 98.5px, 0 97px,
-        1px 95.5px, 2.5px 94px, 3.5px 92.5px,
-        4px 91px, 3.5px 89.5px, 2.5px 88px,
-        1px 86.5px, 0 85px,
-        1px 83.5px, 2.5px 82px, 3.5px 80.5px,
-        4px 79px, 3.5px 77.5px, 2.5px 76px,
-        1px 74.5px, 0 73px,
-        1px 71.5px, 2.5px 70px, 3.5px 68.5px,
-        4px 67px, 3.5px 65.5px, 2.5px 64px,
-        1px 62.5px, 0 61px,
-        1px 59.5px, 2.5px 58px, 3.5px 56.5px,
-        4px 55px, 3.5px 53.5px, 2.5px 52px,
-        1px 50.5px, 0 49px,
-        1px 47.5px, 2.5px 46px, 3.5px 44.5px,
-        4px 43px, 3.5px 41.5px, 2.5px 40px,
-        1px 38.5px, 0 37px,
-        1px 35.5px, 2.5px 34px, 3.5px 32.5px,
-        4px 31px, 3.5px 29.5px, 2.5px 28px,
-        1px 26.5px, 0 25px
+        /* Left side - torn edge effect */
+        0 calc(var(--ticket-corner) * 7.0),
+        0.05vw calc(var(--ticket-corner) * 6.8), 0.13vw calc(var(--ticket-corner) * 6.6),
+        0.21vw calc(var(--ticket-corner) * 6.4), 0 calc(var(--ticket-corner) * 6.2),
+        0.05vw calc(var(--ticket-corner) * 6.0), 0.13vw calc(var(--ticket-corner) * 5.8),
+        0.21vw calc(var(--ticket-corner) * 5.6), 0 calc(var(--ticket-corner) * 5.4),
+        0.05vw calc(var(--ticket-corner) * 5.2), 0.13vw calc(var(--ticket-corner) * 5.0),
+        0.21vw calc(var(--ticket-corner) * 4.8), 0 calc(var(--ticket-corner) * 4.6),
+        0.05vw calc(var(--ticket-corner) * 4.4), 0.13vw calc(var(--ticket-corner) * 4.2),
+        0.21vw calc(var(--ticket-corner) * 4.0), 0 calc(var(--ticket-corner) * 3.8),
+        0.05vw calc(var(--ticket-corner) * 3.6), 0.13vw calc(var(--ticket-corner) * 3.4),
+        0.21vw calc(var(--ticket-corner) * 3.2), 0 calc(var(--ticket-corner) * 3.0),
+        0.05vw calc(var(--ticket-corner) * 2.8), 0.13vw calc(var(--ticket-corner) * 2.6),
+        0.21vw calc(var(--ticket-corner) * 2.4), 0 calc(var(--ticket-corner) * 2.2),
+        0.05vw calc(var(--ticket-corner) * 1.9), 0.13vw calc(var(--ticket-corner) * 1.7),
+        0.21vw calc(var(--ticket-corner) * 1.6), 0 calc(var(--ticket-corner) * 1.5)
     );
 }
 
@@ -197,33 +256,62 @@ body {
 /* Controls */
 .controls {
     position: fixed;
-    bottom: 30px;
+    bottom: 1.56vw;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 20px 40px;
-    border-radius: 50px;
+    backdrop-filter: blur(0.52vw);
+    padding: 1.04vw 2.08vw;
+    border-radius: 2.60vw;
     color: white;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 0.78vw;
     z-index: 100;
 }
 
 .controls label {
-    font-size: 16px;
+    font-size: clamp(12px, 0.83vw, 16px);
     font-weight: 500;
+    white-space: nowrap;
 }
 
 #angle, #speed {
-    width: 150px;
+    width: clamp(100px, 7.81vw, 150px);
     cursor: pointer;
 }
 
 #angleValue, #speedValue {
     display: inline-block;
-    min-width: 30px;
+    min-width: 1.56vw;
     font-weight: bold;
     color: #f4e4c1;
+}
+
+/* Responsive adjustments for controls */
+@media (max-width: 768px) {
+    .controls {
+        bottom: 3vw;
+        padding: 2vw 3vw;
+        gap: 1.5vw;
+    }
+
+    .controls label {
+        font-size: clamp(10px, 1.8vw, 14px);
+    }
+
+    #angle, #speed {
+        width: clamp(80px, 15vw, 120px);
+    }
+}
+
+@media (max-width: 480px) {
+    .controls {
+        bottom: 5vw;
+        padding: 3vw 4vw;
+        flex-direction: column;
+        gap: 2vw;
+    }
 }

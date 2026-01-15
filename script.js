@@ -50,7 +50,6 @@ function createTickets() {
         ticketEl.innerHTML = `
             <div class="punch-hole"></div>
             <div class="punch-hole"></div>
-            <div class="punch-hole"></div>
             <img src="${ticket.image}" alt="Movie ticket" class="ticket-image">
         `;
 
@@ -80,7 +79,7 @@ function animate() {
 
         // Calculate dimensions for seamless loop
         const ticketWidth = 320;
-        const gap = 10;
+        const gap = 5;
         const singleSetWidth = (ticketWidth + gap) * tickets.length;
 
         // Reset position when one set of tickets has passed for seamless loop

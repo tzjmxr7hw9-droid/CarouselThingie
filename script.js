@@ -21,7 +21,7 @@ const tickets = [
         link: 'details.html?movie=5'
     },
     {
-        image: 'https://images.unsplash.com/photo-1574267432644-f610f5293744?w=400',
+        image: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=400',
         link: 'details.html?movie=6'
     }
 ];
@@ -79,7 +79,7 @@ function animate() {
 
         // Calculate dimensions for seamless loop
         const ticketWidth = 320;
-        const gap = 5;
+        const gap = 1;
         const singleSetWidth = (ticketWidth + gap) * tickets.length;
 
         // Reset position when one set of tickets has passed for seamless loop

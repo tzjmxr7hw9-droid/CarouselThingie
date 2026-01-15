@@ -1,34 +1,3 @@
-// Sample ticket data
-const tickets = [
-    {
-        image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400',
-        link: 'details.html?movie=1'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=400',
-        link: 'details.html?movie=2'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400',
-        link: 'details.html?movie=3'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=400',
-        link: 'details.html?movie=4'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1571847140471-1d7766e825ea?w=400',
-        link: 'details.html?movie=5'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=400',
-        link: 'details.html?movie=6'
-    }
-];
-
-// Duplicate tickets for seamless loop
-const allTickets = [...tickets, ...tickets, ...tickets];
-
 const carousel = document.getElementById('carousel');
 const angleInput = document.getElementById('angle');
 const angleValue = document.getElementById('angleValue');
@@ -41,18 +10,30 @@ let position = 0; // Single axis position
 let speed = 2;
 let isPaused = false;
 
-// Create ticket elements
-function createTickets() {
-    carousel.innerHTML = '';
-    allTickets.forEach((ticket, index) => {
-        const ticketEl = document.createElement('div');
-        ticketEl.className = 'ticket';
-        ticketEl.innerHTML = `
-            <div class="punch-hole"></div>
-            <div class="punch-hole"></div>
-            <img src="${ticket.image}" alt="Movie ticket" class="ticket-image">
-        `;
+// Store original tickets count and duplicate them for seamless loop
+let originalTicketCount = 0;
 
+function setupTickets() {
+    // Get the original tickets from HTML
+    const originalTickets = Array.from(carousel.querySelectorAll('.ticket'));
+    originalTicketCount = originalTickets.length;
+
+    // Clone the entire set of tickets twice for seamless loop (3 sets total)
+    // First, clone all tickets once
+    originalTickets.forEach(ticket => {
+        const clone1 = ticket.cloneNode(true);
+        carousel.appendChild(clone1);
+    });
+
+    // Then clone all tickets again
+    originalTickets.forEach(ticket => {
+        const clone2 = ticket.cloneNode(true);
+        carousel.appendChild(clone2);
+    });
+
+    // Add event listeners to all tickets (original + clones)
+    const allTickets = carousel.querySelectorAll('.ticket');
+    allTickets.forEach(ticketEl => {
         // Add hover listeners
         ticketEl.addEventListener('mouseenter', () => {
             isPaused = true;
@@ -64,10 +45,11 @@ function createTickets() {
 
         // Add click listener
         ticketEl.addEventListener('click', () => {
-            window.location.href = ticket.link;
+            const link = ticketEl.getAttribute('data-link');
+            if (link) {
+                window.location.href = link;
+            }
         });
-
-        carousel.appendChild(ticketEl);
     });
 }
 
@@ -79,11 +61,11 @@ function animate() {
 
         // Calculate dimensions for seamless loop dynamically
         const firstTicket = carousel.querySelector('.ticket');
-        if (firstTicket) {
+        if (firstTicket && originalTicketCount > 0) {
             const ticketWidth = firstTicket.offsetWidth;
             const computedStyle = window.getComputedStyle(carousel);
             const gap = parseFloat(computedStyle.gap) || 0;
-            const singleSetWidth = (ticketWidth + gap) * tickets.length;
+            const singleSetWidth = (ticketWidth + gap) * originalTicketCount;
 
             // Reset position when one set of tickets has passed for seamless loop
             if (position >= singleSetWidth) {
@@ -113,7 +95,7 @@ speedInput.addEventListener('input', (e) => {
 
 // Initialize
 function init() {
-    createTickets();
+    setupTickets();
     position = 0;
     animate();
 }
@@ -125,11 +107,11 @@ window.addEventListener('resize', () => {
     resizeTimeout = setTimeout(() => {
         // Reset position on resize to avoid glitches
         const firstTicket = carousel.querySelector('.ticket');
-        if (firstTicket) {
+        if (firstTicket && originalTicketCount > 0) {
             const ticketWidth = firstTicket.offsetWidth;
             const computedStyle = window.getComputedStyle(carousel);
             const gap = parseFloat(computedStyle.gap) || 0;
-            const singleSetWidth = (ticketWidth + gap) * tickets.length;
+            const singleSetWidth = (ticketWidth + gap) * originalTicketCount;
 
             // Adjust position to stay within bounds
             if (position >= singleSetWidth) {

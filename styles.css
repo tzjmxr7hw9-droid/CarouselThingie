@@ -6,40 +6,40 @@
 
 :root {
     /* Ticket dimensions based on viewport (320px @ 1920px width = 16.67vw) */
-    --ticket-width: 16.67vw;
-    --ticket-height: 7.55vw; /* Maintains 320:145 aspect ratio */
-    --ticket-corner: 0.885vw; /* 17px scaled */
-    --ticket-gap: 0.05vw; /* 1px scaled */
-    --punch-hole-size: 0.52vw; /* 10px scaled */
-    --punch-hole-offset: 1.04vw; /* 20px scaled */
+    --ticket-width: 20vw;
+    --ticket-height: 9.06vw; /* Maintains 320:145 aspect ratio */
+    --ticket-corner: 1.062vw; /* 17px scaled + 20% */
+    --ticket-gap: 0.06vw; /* 1px scaled + 20% */
+    --punch-hole-size: 0.624vw; /* 10px scaled + 20% */
+    --punch-hole-offset: 1.248vw; /* 20px scaled + 20% */
     --hover-scale: 1.15;
 
     /* Responsive breakpoints - adjust ticket size for smaller screens */
     @media (max-width: 1200px) {
-        --ticket-width: 20vw;
-        --ticket-height: 9.06vw;
-        --ticket-corner: 1.06vw;
-        --ticket-gap: 0.08vw;
-        --punch-hole-size: 0.63vw;
-        --punch-hole-offset: 1.25vw;
+        --ticket-width: 24vw;
+        --ticket-height: 10.87vw;
+        --ticket-corner: 1.272vw;
+        --ticket-gap: 0.096vw;
+        --punch-hole-size: 0.756vw;
+        --punch-hole-offset: 1.5vw;
     }
 
     @media (max-width: 768px) {
-        --ticket-width: 30vw;
-        --ticket-height: 13.59vw;
-        --ticket-corner: 1.59vw;
-        --ticket-gap: 0.13vw;
-        --punch-hole-size: 0.94vw;
-        --punch-hole-offset: 1.88vw;
+        --ticket-width: 36vw;
+        --ticket-height: 16.31vw;
+        --ticket-corner: 1.908vw;
+        --ticket-gap: 0.156vw;
+        --punch-hole-size: 1.128vw;
+        --punch-hole-offset: 2.256vw;
     }
 
     @media (max-width: 480px) {
-        --ticket-width: 45vw;
-        --ticket-height: 20.39vw;
-        --ticket-corner: 2.39vw;
-        --ticket-gap: 0.20vw;
-        --punch-hole-size: 1.41vw;
-        --punch-hole-offset: 2.81vw;
+        --ticket-width: 54vw;
+        --ticket-height: 24.47vw;
+        --ticket-corner: 2.868vw;
+        --ticket-gap: 0.24vw;
+        --punch-hole-size: 1.692vw;
+        --punch-hole-offset: 3.372vw;
     }
 }
 
@@ -165,9 +165,17 @@ body {
 /* Hover effect */
 .ticket:hover {
     transform: scale(var(--hover-scale)) translateZ(1.04vw);
-    box-shadow: 0 1.04vw 2.60vw rgba(0, 0, 0, 0.7);
+    box-shadow:
+        0 0.5vw 1vw rgba(0, 0, 0, 0.3),
+        0 1vw 2vw rgba(0, 0, 0, 0.4),
+        0 2vw 4vw rgba(0, 0, 0, 0.3),
+        0 3vw 6vw rgba(0, 0, 0, 0.2),
+        0 0 2vw rgba(255, 255, 255, 0.1);
     z-index: 10;
-    filter: drop-shadow(0 1.04vw 1.30vw rgba(0, 0, 0, 0.8));
+    filter:
+        drop-shadow(0 1.5vw 2vw rgba(0, 0, 0, 0.5))
+        drop-shadow(0 0.5vw 1vw rgba(0, 0, 0, 0.4))
+        brightness(1.05);
     clip-path: polygon(
         /* Top left corner - inward circular arc */
         0 var(--ticket-corner),

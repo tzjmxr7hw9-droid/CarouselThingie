@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #f4e4c1;
+        }
+
+        p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f4e4c1 0%, #e8d4b0 100%);
+            color: #2a2a2a;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .ticket-stub {
+            display: inline-block;
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ticket-stub">🎟️</div>
+        <h1>Movie Details</h1>
+        <p id="movieInfo">Loading movie information...</p>
+        <a href="index.html" class="back-button">← Back to Carousel</a>
+    </div>
+
+    <script>
+        // Get movie ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movie');
+
+        const movies = {
+            '1': { title: 'The Grand Adventure', info: 'An epic journey across uncharted territories.' },
+            '2': { title: 'Midnight Mystery', info: 'A thrilling detective story set in the shadows.' },
+            '3': { title: 'Love in Paris', info: 'A romantic tale in the city of lights.' },
+            '4': { title: 'Space Odyssey', info: 'Exploring the final frontier of humanity.' },
+            '5': { title: 'Comedy Night', info: 'Laugh out loud with this hilarious comedy.' },
+            '6': { title: 'Dragon Quest', info: 'A magical adventure in a fantasy realm.' }
+        };
+
+        const movie = movies[movieId];
+        if (movie) {
+            document.getElementById('movieInfo').textContent = `${movie.title} - ${movie.info}`;
+        } else {
+            document.getElementById('movieInfo').textContent = 'Movie not found.';
+        }
+    </script>
+</body>
+</html>

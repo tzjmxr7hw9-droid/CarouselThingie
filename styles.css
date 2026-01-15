@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 100%);
+    overflow: hidden;
+    height: 100vh;
+}
+
+.carousel-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.carousel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    gap: 10px;
+    transform-origin: center center;
+}
+
+.ticket {
+    position: relative;
+    width: 320px;
+    height: 180px;
+    background:
+        radial-gradient(circle at 0 0, transparent 12px, #f4e4c1 12px) top left,
+        radial-gradient(circle at 100% 0, transparent 12px, #f4e4c1 12px) top right,
+        radial-gradient(circle at 0 100%, transparent 12px, #e8d4b0 12px) bottom left,
+        radial-gradient(circle at 100% 100%, transparent 12px, #e8d4b0 12px) bottom right;
+    background-size: 51% 51%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    overflow: visible;
+    clip-path: polygon(
+        /* Left side with teeth */
+        0 30px,
+        5px 35px, 0 40px,
+        0 50px,
+        5px 55px, 0 60px,
+        0 70px,
+        5px 75px, 0 80px,
+        0 90px,
+        5px 95px, 0 100px,
+        0 110px,
+        5px 115px, 0 120px,
+        0 130px,
+        5px 135px, 0 140px,
+        0 150px,
+        /* Bottom left corner */
+        0 calc(100% - 12px),
+        12px 100%,
+        /* Bottom side */
+        calc(50% - 12.5px) 100%,
+        50% calc(100% + 12.5px),
+        calc(50% + 12.5px) 100%,
+        calc(100% - 12px) 100%,
+        /* Bottom right corner */
+        100% calc(100% - 12px),
+        /* Right side with teeth */
+        100% 150px,
+        calc(100% - 5px) 145px, 100% 140px,
+        100% 130px,
+        calc(100% - 5px) 125px, 100% 120px,
+        100% 110px,
+        calc(100% - 5px) 105px, 100% 100px,
+        100% 90px,
+        calc(100% - 5px) 85px, 100% 80px,
+        100% 70px,
+        calc(100% - 5px) 65px, 100% 60px,
+        100% 50px,
+        calc(100% - 5px) 45px, 100% 40px,
+        100% 30px,
+        /* Top right corner */
+        100% 12px,
+        calc(100% - 12px) 0,
+        /* Top side */
+        calc(50% + 12.5px) 0,
+        50% -12.5px,
+        calc(50% - 12.5px) 0,
+        12px 0,
+        /* Top left corner */
+        0 12px
+    );
+}
+
+/* Cinema ticket curved corners effect - handled by clip-path */
+
+/* Punch holes */
+.punch-hole {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #2a2a2a;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.punch-hole:nth-child(1) {
+    left: 20px;
+}
+
+.punch-hole:nth-child(2) {
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.punch-hole:nth-child(3) {
+    right: 20px;
+}
+
+/* Ticket content */
+.ticket-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Hover effect */
+.ticket:hover {
+    transform: scale(1.15) translateZ(20px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.carousel.paused {
+    animation-play-state: paused !important;
+}
+
+/* Controls */
+.controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    border-radius: 50px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.controls label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#angle, #speed {
+    width: 150px;
+    cursor: pointer;
+}
+
+#angleValue, #speedValue {
+    display: inline-block;
+    min-width: 30px;
+    font-weight: bold;
+    color: #f4e4c1;
+}
